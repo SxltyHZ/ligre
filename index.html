@@ -1,28 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Three.js + Modelo 3D</title>
-  <style>
-    body { margin: 0; overflow: hidden; background: #000; }
-    canvas { display: block; }
-  </style>
-
-  <!-- 👇 Import map goes here -->
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.160.1/build/three.module.js",
-        "GLTFLoader": "https://unpkg.com/three@0.160.1/examples/jsm/loaders/GLTFLoader.js",
-        "OrbitControls": "https://unpkg.com/three@0.160.1/examples/jsm/controls/OrbitControls.js"
+  <head>
+    <meta charset="UTF-8" />
+    <title>Planeta en A-Frame</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        background-color: #000;
       }
-    }
-  </script>
-</head>
-<body>
-  <!-- 👇 Your script tag stays here -->
-  <script type="module" src="./main.js"></script>
-</body>
+      a-scene {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <a-scene
+      embedded
+      renderer="antialias: true"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: true"
+    >
+      <!-- Cámara controlable -->
+      <a-entity camera look-controls position="0 1.6 3"></a-entity>
+
+      <!-- Luz ambiental -->
+      <a-entity light="type: ambient; color: #fff; intensity: 0.4"></a-entity>
+
+      <!-- Luz direccional -->
+      <a-entity light="type: directional; color: #fff; intensity: 0.8" position="2 4 3"></a-entity>
+
+      <!-- Modelo GLB -->
+      <a-entity 
+        gltf-model="./models/planet.glb" 
+        scale="1 1 1"
+        position="0 0 0"
+        rotation="0 0 0"
+      ></a-entity>
+
+      <!-- Fondo opcional -->
+      <a-sky color="#000000"></a-sky>
+    </a-scene>
+  </body>
 </html>
+
 
