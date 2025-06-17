@@ -1,55 +1,61 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'GLTFLoader';
-import { OrbitControls } from 'OrbitControls';
+// Importar desde CDN (Three.js + loaders + controles)
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.150.1/examples/jsm/controls/OrbitControls.js';
 
+// Crear escena
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
+scene.background = new THREE.Color(0x000000); // Fondo negro
 
+// Cámara
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
 );
-camera.position.z = 5;
+camera.position.set(0, 1.5, 5);
 
+// Renderizador
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
-// Controls
+// Controles (OrbitControls)
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0, 0); // Punto de interés (opcional)
+controls.enableDamping = true; // Suavidad al rotar
 
-// Lighting
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
-hemiLight.position.set(0, 20, 0);
-scene.add(hemiLight);
+// Iluminación
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+scene.add(ambientLight);
 
-// Load your model
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(2, 5, 3);
+scene.add(directionalLight);
+
+// Cargar modelo GLB
 const loader = new GLTFLoader();
 loader.load(
-  './stylized_planet.glb', // replace with your GLB file path
+  './models/planet.glb', // Asegúrate que esta ruta sea correcta
   (gltf) => {
     const model = gltf.scene;
     model.position.set(0, 0, 0);
+    model.scale.set(1, 1, 1); // Ajusta escala si es necesario
     scene.add(model);
   },
   undefined,
-  (error) => console.error('Error loading model:', error)
+  (error) => {
+    console.error('Error al cargar el modelo:', error);
+  }
 );
 
-// Resize handler
+// Responsividad
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-});
+})
 
-// Render loop
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-}
-animate();
 
