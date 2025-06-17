@@ -1,10 +1,10 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.150.1/build/three.module.js';
+import * as THREE from 'three';
+import { GLTFLoader } from 'GLTFLoader';
+import { OrbitControls } from 'OrbitControls';
 
-// Escena
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000); // Fondo negro
+scene.background = new THREE.Color(0x000000);
 
-// Cámara
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
@@ -13,37 +13,43 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.z = 5;
 
-// Render
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
-// Luces
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(ambientLight);
+// Controls
+const controls = new OrbitControls(camera, renderer.domElement);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(2, 5, 3);
-scene.add(directionalLight);
+// Lighting
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+hemiLight.position.set(0, 20, 0);
+scene.add(hemiLight);
 
-// Esfera (planeta)
-const geometry = new THREE.SphereGeometry(1.5, 32, 32); // radio, segmentos
-const material = new THREE.MeshStandardMaterial({ color: 0x0044ff });
-const sphere = new THREE.Mesh(geometry, material);
-scene.add(sphere);
+// Load your model
+const loader = new GLTFLoader();
+loader.load(
+  './stylized_planet.glb', // replace with your GLB file path
+  (gltf) => {
+    const model = gltf.scene;
+    model.position.set(0, 0, 0);
+    scene.add(model);
+  },
+  undefined,
+  (error) => console.error('Error loading model:', error)
+);
 
-// Animación
-function animate() {
-  requestAnimationFrame(animate);
-  sphere.rotation.y += 0.002;
-  renderer.render(scene, camera);
-}
-animate();
-
-// Responsividad
+// Resize handler
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+// Render loop
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+

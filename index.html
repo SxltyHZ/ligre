@@ -8,8 +8,21 @@
     body { margin: 0; overflow: hidden; background: #000; }
     canvas { display: block; }
   </style>
+
+  <!-- 👇 Import map goes here -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.1/build/three.module.js",
+        "GLTFLoader": "https://unpkg.com/three@0.160.1/examples/jsm/loaders/GLTFLoader.js",
+        "OrbitControls": "https://unpkg.com/three@0.160.1/examples/jsm/controls/OrbitControls.js"
+      }
+    }
+  </script>
 </head>
 <body>
+  <!-- 👇 Your script tag stays here -->
   <script type="module" src="./main.js"></script>
 </body>
 </html>
+
