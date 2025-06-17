@@ -25,7 +25,7 @@ scene.add(directionalLight);
 // Cargar modelo 3D
 const loader = new GLTFLoader();
 loader.load(
-  '../models/planet.glb', // 👈 Cambia este nombre por el tuyo
+  './models/stylized_planet.glb', // 👈 Cambia este nombre por el tuyo
   function (gltf) {
     const model = gltf.scene;
     model.scale.set(1, 1, 1); // Ajusta escala si es necesario
